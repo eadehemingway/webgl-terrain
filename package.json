@@ -1,0 +1,21 @@
+{
+  "name": "webgl",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup -cw"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@rollup/plugin-commonjs": "^21.0.1",
+    "@rollup/plugin-node-resolve": "^13.0.6",
+    "eslint": "^8.2.0",
+    "gl-matrix": "^3.4.3",
+    "gl-wireframe": "^1.0.1",
+    "regl": "^2.1.0",
+    "rollup": "^2.60.0"
+  }
+}
