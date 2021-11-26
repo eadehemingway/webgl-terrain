@@ -15,6 +15,7 @@
     "eslint": "^8.2.0",
     "gl-matrix": "^3.4.3",
     "gl-wireframe": "^1.0.1",
+    "normals": "^1.1.0",
     "primitive-plane": "^2.0.1",
     "regl": "^2.1.0",
     "rollup": "^2.60.0",

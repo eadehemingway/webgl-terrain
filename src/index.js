@@ -3,6 +3,7 @@ const { mat4 } = require("gl-matrix");
 const createPlane = require("primitive-plane");
 const wireframe = require("gl-wireframe");
 const { SimplexNoise } = require("simplex-noise");
+const normals = require("normals");
 
 const plane = createPlane(1, 1, 50, 50); // args; size of x, size of y, number of subdivisionos in x, number of subdivisions in y
 const regl = REGL({});
@@ -28,13 +29,16 @@ plane.positions.forEach(p=> {
 
 });
 
+const norms = normals.vertexNormals(plane.cells, plane.positions, 0.000000001);
 
 const drawPoints = regl({
-    primitive: "lines", // to show the wireframe
+    // primitive: "lines", // to show the wireframe
     attributes: {
-        position: plane.positions
+        position: plane.positions,
+        normal: norms
     },
-    elements: wireframe(plane.cells),
+    elements: plane.cells,
+    // elements: wireframe(plane.cells),
     cull: {  enable:false },
     depth: { enable: false, mask: false },
     uniforms: {
@@ -47,20 +51,26 @@ const drawPoints = regl({
         uniform mat4 view_matrix;
         attribute vec3 position;
         varying vec3 v_position;
-
+        attribute vec3 normal;
+        varying vec3 v_normal;
 
         void main(){
+            v_normal = normal;
             v_position = position;
             gl_Position = projection_matrix * view_matrix * vec4(position, 1.0);
         }
     `,
     frag: `
         precision mediump float;
-
+        varying vec3 v_normal;
+        varying vec3 v_position;
 
         void main(){
 
-            gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+            vec3 light_direction = vec3(0.0, 0.0, 1.0); // we need the light direction to know how bright the surface should be coloured.
+            float light_brightness = max(0.0, dot(light_direction, v_normal)); // we input light direction and the vertext normal and use the dot product to work out how bright the color should be
+            // if the surface is facing the light directly it should be really bright
+            gl_FragColor = vec4(vec3(1.0) * light_brightness, 1.0);
 
         }
 
