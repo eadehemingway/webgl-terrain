@@ -114,10 +114,14 @@ img.onload = ()=> {
 
         mat4.perspective(projection_matrix, field_of_view, ratio, 0.01, 100.0); // adds concept of perspective (objcts getting bigger as they get closer)
 
-
+        const t = Date.now() / 10000;
+        const distance = 2;
+        const eye_x = Math.cos(t) * distance;
+        const eye_y = Math.sin(t) * distance;
+        const eye = [eye_x, eye_y, 0.8];
         // position camera --------
         // the camera starts off being in hte middle of the projection so it cant see anyhting until it has a little distance
-        mat4.lookAt(view_matrix, [1, 1, 1], [0, 0, 0], [0, 0, 1]); // this positions the camera at this position. lookAt(out, eye, center, up)
+        mat4.lookAt(view_matrix, eye, [0, 0, 0], [0, 0, 1]); // this positions the camera at this position. lookAt(out, eye, center, up)
 
         drawPoints({ grass });
     }
