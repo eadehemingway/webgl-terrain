@@ -44,6 +44,7 @@ const drawPoints = regl({
     uniforms: {
         projection_matrix: ()=> projection_matrix,
         view_matrix: ()=> view_matrix,
+        grass_texture: regl.prop("grass")
     },
     vert: `
         precision mediump float;
@@ -64,13 +65,17 @@ const drawPoints = regl({
         precision mediump float;
         varying vec3 v_normal;
         varying vec3 v_position;
+        uniform sampler2D grass_texture;
 
         void main(){
 
             vec3 light_direction = vec3(0.0, 0.0, 1.0); // we need the light direction to know how bright the surface should be coloured.
             float light_brightness = max(0.0, dot(light_direction, v_normal)); // we input light direction and the vertext normal and use the dot product to work out how bright the color should be
             // if the surface is facing the light directly it should be really bright
-            gl_FragColor = vec4(vec3(1.0) * light_brightness, 1.0);
+
+            // albedo is the name for the color of hte surface wtihout any light on it
+            vec3 albedo = texture2D(grass_texture, v_position.xy).rgb;
+            gl_FragColor = vec4(albedo * light_brightness, 1.0);
 
         }
 
@@ -80,24 +85,30 @@ const drawPoints = regl({
 });
 
 
+const img = document.createElement("img");
+img.src = "./grass.jpg";
+img.onload = ()=> {
+
+    const grass = regl.texture({ data: img, wrap: "repeat" });
+
+    function render(){
+        const green = [0.2, 0.5, 0.4, 1.0]; // arbitrary background
+        regl.clear({ color: green });
+
+        // calculating the perspective projection ----------
+        const ratio = window.innerWidth/ window.innerHeight;
+        const field_of_view = Math.PI/4; // 8th of a circle in radians
+
+        mat4.perspective(projection_matrix, field_of_view, ratio, 0.01, 100.0); // adds concept of perspective (objcts getting bigger as they get closer)
 
 
-function render(){
-    const green = [0.2, 0.5, 0.4, 1.0]; // arbitrary background
-    regl.clear({ color: green });
+        // position camera --------
+        // the camera starts off being in hte middle of the projection so it cant see anyhting until it has a little distance
+        mat4.lookAt(view_matrix, [1, 1, 1], [0, 0, 0], [0, 0, 1]); // this positions the camera at this position. lookAt(out, eye, center, up)
 
-    // calculating the perspective projection ----------
-    const ratio = window.innerWidth/ window.innerHeight;
-    const field_of_view = Math.PI/4; // 8th of a circle in radians
+        drawPoints({ grass });
+    }
 
-    mat4.perspective(projection_matrix, field_of_view, ratio, 0.01, 100.0); // adds concept of perspective (objcts getting bigger as they get closer)
+    regl.frame(render);
 
-
-    // position camera --------
-    // the camera starts off being in hte middle of the projection so it cant see anyhting until it has a little distance
-    mat4.lookAt(view_matrix, [1, 1, 1], [0, 0, 0], [0, 0, 1]); // this positions the camera at this position. lookAt(out, eye, center, up)
-
-    drawPoints();
-}
-
-regl.frame(render);
+};
