@@ -1,6 +1,7 @@
 const REGL = require("regl");
 const { mat4 } = require("gl-matrix");
 const createPlane = require("primitive-plane");
+const wireframe = require("gl-wireframe");
 
 const plane = createPlane(1, 1, 50, 50); // args; size of x, size of y, number of subdivisionos in x, number of subdivisions in y
 const regl = REGL({});
@@ -11,12 +12,11 @@ const view_matrix = mat4.create(); // for positioning the camera
 
 
 const drawPoints = regl({
-    // primitive: "lines", // to show the wireframe
+    primitive: "lines", // to show the wireframe
     attributes: {
         position: plane.positions
     },
-    // elements: wireframe(plane.cells),
-    elements: plane.cells,
+    elements: wireframe(plane.cells),
     cull: {  enable:false },
     depth: { enable: false, mask: false },
     uniforms: {
