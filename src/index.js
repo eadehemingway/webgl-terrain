@@ -2,6 +2,7 @@ const REGL = require("regl");
 const { mat4 } = require("gl-matrix");
 const createPlane = require("primitive-plane");
 const wireframe = require("gl-wireframe");
+const { SimplexNoise } = require("simplex-noise");
 
 const plane = createPlane(1, 1, 50, 50); // args; size of x, size of y, number of subdivisionos in x, number of subdivisions in y
 const regl = REGL({});
@@ -9,6 +10,23 @@ const regl = REGL({});
 // projection is the translation step between 3d and 2d. the projection is like the .range() method in a d3 scale. The space we have to deal with when converting 3d to 2d
 const projection_matrix = mat4.create(); // dont need to understand the maths for this but basically returns 16 numbers that has all the info in it for any tranformation sequence
 const view_matrix = mat4.create(); // for positioning the camera
+
+const seed = "hello"; // means the noise will always produce the same results
+const simplex = new SimplexNoise(seed);
+
+plane.positions.forEach(p=> {
+    const frequency = 0.4;
+    const height = 0.2;
+
+    function getNoise(x, y, freq, height){
+        return simplex.noise2D(x * freq, y * freq) * height;
+    }
+    p[2] += getNoise(p[0], p[1], frequency, height);
+    p[2] += getNoise(p[0], p[1], frequency * 2.5, height / 2);
+    p[2] += getNoise(p[0], p[1], frequency * 8, height / 6);
+    p[2] += getNoise(p[0], p[1], frequency * 16, height / 24);
+
+});
 
 
 const drawPoints = regl({
