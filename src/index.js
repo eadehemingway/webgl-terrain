@@ -1,7 +1,8 @@
 const REGL = require("regl");
 const { mat4 } = require("gl-matrix");
+const createPlane = require("primitive-plane");
 
-
+const plane = createPlane(1, 1, 50, 50); // args; size of x, size of y, number of subdivisionos in x, number of subdivisions in y
 const regl = REGL({});
 
 // projection is the translation step between 3d and 2d. the projection is like the .range() method in a d3 scale. The space we have to deal with when converting 3d to 2d
@@ -12,10 +13,10 @@ const view_matrix = mat4.create(); // for positioning the camera
 const drawPoints = regl({
     // primitive: "lines", // to show the wireframe
     attributes: {
-        position: []
+        position: plane.positions
     },
     // elements: wireframe(plane.cells),
-    elements: [],
+    elements: plane.cells,
     cull: {  enable:false },
     depth: { enable: false, mask: false },
     uniforms: {
@@ -66,7 +67,7 @@ function render(){
 
     // position camera --------
     // the camera starts off being in hte middle of the projection so it cant see anyhting until it has a little distance
-    mat4.lookAt(view_matrix, [1, 1, 1], [0, 0, 0], [0, 0, 1]); // this positions the camera at this position
+    mat4.lookAt(view_matrix, [1, 1, 1], [0, 0, 0], [0, 0, 1]); // this positions the camera at this position. lookAt(out, eye, center, up)
 
     drawPoints();
 }
