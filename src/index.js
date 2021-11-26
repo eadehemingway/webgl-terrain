@@ -66,6 +66,14 @@ const drawPoints = regl({
         varying vec3 v_normal;
         varying vec3 v_position;
         uniform sampler2D grass_texture;
+        ${require("./noise.js")} // this imports the 2d noise from the file
+
+        vec2 rotate(vec2 v, float a) { // we got this from glsl rotate2d (for rotating any vec2)
+            float s = sin(a);
+            float c = cos(a);
+            mat2 m = mat2(c, -s, s, c);
+            return m * v;
+        }
 
         void main(){
 
@@ -73,8 +81,13 @@ const drawPoints = regl({
             float light_brightness = max(0.0, dot(light_direction, v_normal)); // we input light direction and the vertext normal and use the dot product to work out how bright the color should be
             // if the surface is facing the light directly it should be really bright
 
+            // we times v_position.xy by 10 to make the tiling more obvious (so we can see the effects of fixing it)
+            vec3 grass_one = texture2D(grass_texture, v_position.xy * 10.0).rgb;
+            vec3 grass_two = texture2D(grass_texture, rotate(v_position.xy * 10.0, 1.0)).rgb;
+            float blend_factor = snoise(v_position.xy * 5.0) * 0.5 + 0.5;
+
             // albedo is the name for the color of hte surface wtihout any light on it
-            vec3 albedo = texture2D(grass_texture, v_position.xy).rgb;
+            vec3 albedo = mix(grass_one, grass_two, blend_factor);
             gl_FragColor = vec4(albedo * light_brightness, 1.0);
 
         }
