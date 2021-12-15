@@ -34,8 +34,8 @@ exports.TerrainTile = class TerrainTile {
             },
             elements: plane.cells,
             // elements: wireframe(plane.cells),
-            cull: {  enable:false },
-            depth: { enable: false, mask: false },
+            cull: {  enable: true }, // cull enable true means dont draw the underside of the triangles. so this is an optimisation
+            depth: { enable: true, mask: true }, // depth enable true means take depth into consideration, mask true makes sure that what you draw gets added to the depth to be considered
             uniforms: {
                 projection_matrix: regl.prop("projection_matrix"),
                 view_matrix: regl.prop("view_matrix"),
@@ -101,5 +101,6 @@ exports.TerrainTile = class TerrainTile {
         });
 
     }
+
 };
 
