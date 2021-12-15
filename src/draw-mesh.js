@@ -13,6 +13,8 @@ exports.TerrainTile = class TerrainTile {
             const frequency = 0.4;
             const height = 0.2;
 
+            p[0] += tile_x;
+            p[1] += tile_y;
             function getNoise(x, y, freq, height){
                 return simplex.noise2D(x * freq, y * freq) * height;
             }

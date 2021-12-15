@@ -10,7 +10,9 @@ const projection_matrix = mat4.create(); // dont need to understand the maths fo
 const view_matrix = mat4.create(); // for positioning the camera
 
 
-const tile = new TerrainTile(regl, 0, 0);
+const tileOne = new TerrainTile(regl, 0, 0);
+const tileTwo = new TerrainTile(regl, 1, 0);
+const tileThree = new TerrainTile(regl, 0, 1);
 
 
 const img = document.createElement("img");
@@ -38,7 +40,9 @@ img.onload = ()=> {
         // the camera starts off being in hte middle of the projection so it cant see anyhting until it has a little distance
         mat4.lookAt(view_matrix, eye, [0, 0, 0], [0, 0, 1]); // this positions the camera at this position. lookAt(out, eye, center, up)
 
-        tile.drawMesh({ grass, projection_matrix, view_matrix });
+        tileOne.drawMesh({ grass, projection_matrix, view_matrix });
+        tileTwo.drawMesh({ grass, projection_matrix, view_matrix });
+        tileThree.drawMesh({ grass, projection_matrix, view_matrix });
     }
 
     regl.frame(render);
