@@ -1,9 +1,9 @@
-const REGL = require("regl");
+
 const { mat4 } = require("gl-matrix");
 const wireframe = require("gl-wireframe");
 const { TerrainTile } = require("./draw-mesh");
+const regl = require("./regl");
 
-const regl = REGL({});
 
 // projection is the translation step between 3d and 2d. the projection is like the .range() method in a d3 scale. The space we have to deal with when converting 3d to 2d
 const projection_matrix = mat4.create(); // dont need to understand the maths for this but basically returns 16 numbers that has all the info in it for any tranformation sequence
@@ -47,7 +47,8 @@ img.onload = ()=> {
 
 
         for(var key in terrain_tiles){
-            terrain_tiles[key].drawMesh({ grass, projection_matrix, view_matrix });
+            const tile = terrain_tiles[key];
+            // TerrainTile.drawMesh({ grass, projection_matrix, view_matrix , norms:tile.norms, plane: tile.plane });
         }
     }
 
