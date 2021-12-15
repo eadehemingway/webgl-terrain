@@ -62,6 +62,7 @@ exports.TerrainTile = class TerrainTile {
             varying vec3 v_position;
             uniform sampler2D grass_texture;
             ${require("./noise.js")} // this imports the 2d noise from the file
+            ${require("./fog.js")}
 
             vec2 rotate(vec2 v, float a) { // we got this from glsl rotate2d (for rotating any vec2)
                 float s = sin(a);
@@ -70,7 +71,12 @@ exports.TerrainTile = class TerrainTile {
                 return m * v;
             }
 
+            const float FOG_DENSITY = 0.5;
+
             void main(){
+                float fogDistance = gl_FragCoord.z / gl_FragCoord.w;
+                float fogAmount = fogFactorExp2(fogDistance, FOG_DENSITY);
+                const vec3 fogColor = vec3(1.0); // white
 
                 vec3 light_direction = vec3(0.0, 0.0, 1.0); // we need the light direction to know how bright the surface should be coloured.
                 float light_brightness = max(0.0, dot(light_direction, v_normal)); // we input light direction and the vertext normal and use the dot product to work out how bright the color should be
@@ -83,7 +89,9 @@ exports.TerrainTile = class TerrainTile {
 
                 // albedo is the name for the color of hte surface wtihout any light on it
                 vec3 albedo = mix(grass_one, grass_two, blend_factor);
-                gl_FragColor = vec4(albedo * light_brightness, 1.0);
+                vec3 terrain_color = vec3(albedo * light_brightness);
+
+                gl_FragColor = vec4(mix(terrain_color, fogColor, fogAmount), 1.0);
 
             }
 
