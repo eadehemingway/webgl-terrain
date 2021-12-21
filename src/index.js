@@ -15,7 +15,7 @@ const terrain_tiles = {};
 for (var x = -1; x <= 1; x ++){
     for (var y = -1; y <= 1; y ++){
         let key = `${x}, ${y}`;
-        terrain_tiles[key] = new TerrainTile(regl, x, y);
+        terrain_tiles[key] = new TerrainTile(x, y);
     }
 }
 
@@ -48,7 +48,7 @@ img.onload = ()=> {
 
         for(var key in terrain_tiles){
             const tile = terrain_tiles[key];
-            // TerrainTile.drawMesh({ grass, projection_matrix, view_matrix , norms:tile.norms, plane: tile.plane });
+            TerrainTile.drawMesh({ grass, projection_matrix, view_matrix , norms:tile.norms, plane: tile.plane });
         }
     }
 
