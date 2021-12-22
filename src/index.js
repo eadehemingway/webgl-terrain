@@ -12,6 +12,7 @@ const view_matrix = mat4.create(); // for positioning the camera
 
 
 const terrain_tiles = {};
+const sphere = new Sphere(0, 0, 0.5);
 
 for (var x = -1; x <= 1; x ++){
     for (var y = -1; y <= 1; y ++){
@@ -51,7 +52,8 @@ img.onload = ()=> {
             const tile = terrain_tiles[key];
             TerrainTile.drawMesh({ grass, projection_matrix, view_matrix , norms:tile.norms, plane: tile.plane });
         }
-        Sphere.drawSphere({ projection_matrix, view_matrix });
+        sphere.step();
+        Sphere.drawSphere({ projection_matrix, view_matrix, model_matrix: sphere.model_matrix });
     }
 
     regl.frame(render);
