@@ -1,4 +1,5 @@
 
+const { Sphere } = require("./draw-sphere");
 const { mat4 } = require("gl-matrix");
 const wireframe = require("gl-wireframe");
 const { TerrainTile } = require("./draw-mesh");
@@ -50,6 +51,7 @@ img.onload = ()=> {
             const tile = terrain_tiles[key];
             TerrainTile.drawMesh({ grass, projection_matrix, view_matrix , norms:tile.norms, plane: tile.plane });
         }
+        Sphere.drawSphere({ projection_matrix, view_matrix });
     }
 
     regl.frame(render);
