@@ -2,19 +2,27 @@
 const icosphere = require("icosphere");
 const regl = require("./regl");
 const { mat4 } = require("gl-matrix");
+const { cannon_world, CANNON } = require("./cannon");
 
 class Sphere{
 
     constructor(x, y, r){
         this.model_matrix = mat4.create();
 
-
+        const radius = 1; // m
+        this.body = new CANNON.Body({
+            mass: 5, // kg
+            position: new CANNON.Vec3(0, 0, 10), // m
+            shape: new CANNON.Sphere(radius)
+        });
+        cannon_world.addBody(this.body);
 
     }
     // step will only exist on the instance not on the class
     step (){
         mat4.identity(this.model_matrix); // takes matrix and resets its transformation  to its original identity
         mat4.scale(this.model_matrix, this.model_matrix, [0.05, 0.05, 0.05]);
+        mat4.translate(this.model_matrix, this.model_matrix, [this.body.position.x, this.body.position.y, this.body.position.z]);
     }
 
 };

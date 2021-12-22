@@ -4,12 +4,22 @@ const { mat4 } = require("gl-matrix");
 const wireframe = require("gl-wireframe");
 const { TerrainTile } = require("./draw-mesh");
 const regl = require("./regl");
+const { cannon_world, CANNON } = require("./cannon");
 
+
+cannon_world.gravity.set(0, 0, -9.82);
 
 // projection is the translation step between 3d and 2d. the projection is like the .range() method in a d3 scale. The space we have to deal with when converting 3d to 2d
 const projection_matrix = mat4.create(); // dont need to understand the maths for this but basically returns 16 numbers that has all the info in it for any tranformation sequence
 const view_matrix = mat4.create(); // for positioning the camera
 
+
+var groundBody = new CANNON.Body({
+    mass: 0 // mass == 0 makes the body static
+});
+const groundShape = new CANNON.Plane();
+groundBody.addShape(groundShape);
+cannon_world.addBody(groundBody);
 
 const terrain_tiles = {};
 const sphere = new Sphere(0, 0, 0.5);
@@ -54,6 +64,8 @@ img.onload = ()=> {
         }
         sphere.step();
         Sphere.drawSphere({ projection_matrix, view_matrix, model_matrix: sphere.model_matrix });
+        cannon_world.step(1/60, 1/60, 3); // giving it values that will make it update in time with our frame rate
+
     }
 
     regl.frame(render);
