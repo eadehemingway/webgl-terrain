@@ -2,18 +2,14 @@
 const icosphere = require("icosphere");
 const regl = require("./regl");
 const { mat4 } = require("gl-matrix");
-const { cannon_world, CANNON } = require("./cannon");
+
 
 class Sphere{
 
     constructor(x, y, r){
         this.model_matrix = mat4.create();
-        this.body = new CANNON.Body({
-            mass: 5, // kg
-            position: new CANNON.Vec3(x, y, 10), // m
-            shape: new CANNON.Sphere(r)
-        });
-        cannon_world.addBody(this.body);
+
+
 
     }
     // step will only exist on the instance not on the class
