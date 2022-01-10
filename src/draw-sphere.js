@@ -8,12 +8,10 @@ class Sphere{
 
     constructor(x, y, r){
         this.model_matrix = mat4.create();
-
-        const radius = 1; // m
         this.body = new CANNON.Body({
             mass: 5, // kg
-            position: new CANNON.Vec3(0, 0, 10), // m
-            shape: new CANNON.Sphere(radius)
+            position: new CANNON.Vec3(x, y, 10), // m
+            shape: new CANNON.Sphere(r)
         });
         cannon_world.addBody(this.body);
 

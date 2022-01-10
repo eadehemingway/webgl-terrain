@@ -1,35 +1,40 @@
 
 const { Sphere } = require("./draw-sphere");
 const { mat4 } = require("gl-matrix");
-const wireframe = require("gl-wireframe");
+
 const { TerrainTile } = require("./draw-mesh");
 const regl = require("./regl");
 const { cannon_world, CANNON } = require("./cannon");
 
 
-cannon_world.gravity.set(0, 0, -9.82);
+cannon_world.gravity.set( 0,  0, -9.82);
 
 // projection is the translation step between 3d and 2d. the projection is like the .range() method in a d3 scale. The space we have to deal with when converting 3d to 2d
 const projection_matrix = mat4.create(); // dont need to understand the maths for this but basically returns 16 numbers that has all the info in it for any tranformation sequence
 const view_matrix = mat4.create(); // for positioning the camera
 
 
-var groundBody = new CANNON.Body({
-    mass: 0 // mass == 0 makes the body static
-});
-const groundShape = new CANNON.Plane();
-groundBody.addShape(groundShape);
-cannon_world.addBody(groundBody);
 
 const terrain_tiles = {};
-const sphere = new Sphere(0, 0, 0.5);
+// const sphere = new Sphere(0, 0, 0.5);
+const sphere_array = [];
+for (var i = 0; i < 100; i ++){
+    const sphere = new Sphere(Math.random()* 25 - 12.5, Math.random()* 25 - 12.5, 0.2);
+    sphere_array.push(sphere);
+}
 
-for (var x = -1; x <= 1; x ++){
-    for (var y = -1; y <= 1; y ++){
+for (var x = 0; x < 1; x ++){
+    for (var y = 0; y < 1; y ++){
         let key = `${x}, ${y}`;
         terrain_tiles[key] = new TerrainTile(x, y);
     }
 }
+// for (var x = -1; x <= 1; x ++){
+//     for (var y = -1; y <= 1; y ++){
+//         let key = `${x}, ${y}`;
+//         terrain_tiles[key] = new TerrainTile(x, y);
+//     }
+// }
 
 
 const img = document.createElement("img");
@@ -50,9 +55,9 @@ img.onload = ()=> {
 
         const t = Date.now() / 10000;
         const distance = 2;
-        const eye_x = Math.cos(t) * distance;
-        const eye_y = Math.sin(t) * distance;
-        const eye = [eye_x, eye_y, 0.4];
+        // const eye_x = Math.cos(t) * distance;
+        // const eye_y = Math.sin(t) * distance;
+        const eye = [1, 1, 3];
         // position camera --------
         // the camera starts off being in hte middle of the projection so it cant see anyhting until it has a little distance
         mat4.lookAt(view_matrix, eye, [0, 0, 0], [0, 0, 1]); // this positions the camera at this position. lookAt(out, eye, center, up)
@@ -62,8 +67,12 @@ img.onload = ()=> {
             const tile = terrain_tiles[key];
             TerrainTile.drawMesh({ grass, projection_matrix, view_matrix , norms:tile.norms, plane: tile.plane });
         }
-        sphere.step();
-        Sphere.drawSphere({ projection_matrix, view_matrix, model_matrix: sphere.model_matrix });
+        for (var i = 0; i < 100; i ++){
+            sphere_array[i].step();
+            Sphere.drawSphere({ projection_matrix, view_matrix, model_matrix: sphere_array[i].model_matrix });
+        }
+        // sphere.step();
+        // Sphere.drawSphere({ projection_matrix, view_matrix, model_matrix: sphere.model_matrix });
         cannon_world.step(1/60, 1/60, 3); // giving it values that will make it update in time with our frame rate
 
     }
