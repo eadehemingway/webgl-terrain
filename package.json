@@ -17,6 +17,7 @@
     "gl-wireframe": "^1.0.1",
     "icosphere": "^1.0.0",
     "normals": "^1.1.0",
+    "oimo": "^1.0.9",
     "primitive-plane": "^2.0.1",
     "regl": "^2.1.0",
     "rollup": "^2.60.0",

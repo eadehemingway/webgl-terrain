@@ -4,6 +4,7 @@ const { mat4 } = require("gl-matrix");
 
 const { TerrainTile } = require("./draw-mesh");
 const regl = require("./regl");
+const { world } = require("./oimo");
 
 
 
@@ -74,7 +75,7 @@ img.onload = ()=> {
         // sphere.step();
         // Sphere.drawSphere({ projection_matrix, view_matrix, model_matrix: sphere.model_matrix });
 
-
+        world.step();
     }
 
     regl.frame(render);
