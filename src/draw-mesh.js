@@ -4,6 +4,7 @@ const normals = require("normals");
 const createPlane = require("primitive-plane");
 const wireframe = require("gl-wireframe");
 const regl = require("./regl");
+const { cannon_world, CANNON } = require("./cannon");
 
 const mesh_resolution = 50;
 
@@ -59,21 +60,16 @@ class TerrainTile {
             height_field_array.push(row);
         }
 
-
-        var body = world.add({
-            type:"plane", // type of shape : sphere, box, cylinder
-            size:[1,1,1], // size of shape
-            pos:[0,0,0], // start position in degree
-            rot:[0,0,90], // start rotation in degree
-            move:true, // dynamic or statique
-            density: 1,
-            friction: 0.2,
-            restitution: 0.2,
-            belongsTo: 1, // The bits of the collision groups to which the shape belongs.
-            collidesWith: 0xffffffff // The bits of the collision groups with which the shape collides.
+        // Create the heightfield shape
+        var height_field_shape = new CANNON.Heightfield(height_field_array, {
+            elementSize:1, // Distance between the data points in X and Y directions (how big the cells inside the grid is)
         });
+        var height_field_body = new CANNON.Body();
+        height_field_body.addShape(height_field_shape);
+        height_field_body.position.set(-mesh_resolution/2, -mesh_resolution/2, 0); // cannon draws planes from top left corner so this is to center it
 
-        this.body = body;
+        cannon_world.addBody(height_field_body);
+
 
 
 

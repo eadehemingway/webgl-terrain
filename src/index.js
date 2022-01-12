@@ -4,11 +4,10 @@ const { mat4 } = require("gl-matrix");
 
 const { TerrainTile } = require("./draw-mesh");
 const regl = require("./regl");
-const { world } = require("./oimo");
+const { cannon_world, CANNON } = require("./cannon");
 
 
-
-
+cannon_world.gravity.set( 0,  0, -9.82);
 
 // projection is the translation step between 3d and 2d. the projection is like the .range() method in a d3 scale. The space we have to deal with when converting 3d to 2d
 const projection_matrix = mat4.create(); // dont need to understand the maths for this but basically returns 16 numbers that has all the info in it for any tranformation sequence
@@ -74,8 +73,8 @@ img.onload = ()=> {
         }
         // sphere.step();
         // Sphere.drawSphere({ projection_matrix, view_matrix, model_matrix: sphere.model_matrix });
+        cannon_world.step(1/60, 1/60, 3); // giving it values that will make it update in time with our frame rate
 
-        world.step();
     }
 
     regl.frame(render);

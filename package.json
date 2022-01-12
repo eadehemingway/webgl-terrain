@@ -12,12 +12,12 @@
   "dependencies": {
     "@rollup/plugin-commonjs": "^21.0.1",
     "@rollup/plugin-node-resolve": "^13.0.6",
+    "cannon": "^0.6.2",
     "eslint": "^8.2.0",
     "gl-matrix": "^3.4.3",
     "gl-wireframe": "^1.0.1",
     "icosphere": "^1.0.0",
     "normals": "^1.1.0",
-    "oimo": "^1.0.9",
     "primitive-plane": "^2.0.1",
     "regl": "^2.1.0",
     "rollup": "^2.60.0",
