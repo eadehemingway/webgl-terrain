@@ -36,6 +36,14 @@ for (var x = 0; x < 1; x ++){
 //     }
 // }
 
+// Current position of the mouse on the screen, from 0-1
+const mouseCoord = [0.5, 0.5];
+
+window.addEventListener("mousemove", (e) => {
+    mouseCoord[0] = e.x / window.innerWidth;
+    mouseCoord[1] = e.y / window.innerHeight;
+}, false);
+
 
 const img = document.createElement("img");
 img.src = "./grass.jpg";
@@ -53,11 +61,12 @@ img.onload = ()=> {
 
         mat4.perspective(projection_matrix, field_of_view, ratio, 0.01, 100.0); // adds concept of perspective (objcts getting bigger as they get closer)
 
-        const t = Date.now() / 10000;
-        const distance = 2;
-        // const eye_x = Math.cos(t) * distance;
-        // const eye_y = Math.sin(t) * distance;
-        const eye = [1, 1, 3];
+        const angle = mouseCoord[0] * Math.PI * 2;
+        const distance = 1 + mouseCoord[1];
+        const eye_x = Math.cos(angle) * distance;
+        const eye_y = Math.sin(angle) * distance;
+        const eye_z = 3 - mouseCoord[1] * 3;
+        const eye = [eye_x, eye_y, eye_z];
         // position camera --------
         // the camera starts off being in hte middle of the projection so it cant see anyhting until it has a little distance
         mat4.lookAt(view_matrix, eye, [0, 0, 0], [0, 0, 1]); // this positions the camera at this position. lookAt(out, eye, center, up)
