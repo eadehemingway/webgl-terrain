@@ -18,8 +18,8 @@ const view_matrix = mat4.create(); // for positioning the camera
 const terrain_tiles = {};
 // const sphere = new Sphere(0, 0, 0.5);
 const sphere_array = [];
-for (var i = 0; i < 100; i ++){
-    const sphere = new Sphere(Math.random()* 25 - 12.5, Math.random()* 25 - 12.5, 0.2);
+for (var i = 0; i < 50; i ++){
+    const sphere = new Sphere(Math.random() * 2 - 1, Math.random() * 2 - 1, 0.05);
     sphere_array.push(sphere);
 }
 
@@ -76,7 +76,7 @@ img.onload = ()=> {
             const tile = terrain_tiles[key];
             TerrainTile.drawMesh({ grass, projection_matrix, view_matrix , norms:tile.norms, plane: tile.plane });
         }
-        for (var i = 0; i < 100; i ++){
+        for (var i = 0; i < sphere_array.length; i ++){
             sphere_array[i].step();
             Sphere.drawSphere({ projection_matrix, view_matrix, model_matrix: sphere_array[i].model_matrix });
         }
