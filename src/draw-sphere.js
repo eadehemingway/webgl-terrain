@@ -19,6 +19,15 @@ class Sphere{
     }
     // step will only exist on the instance not on the class
     step (){
+        if (this.body.position.z < -10) {
+            this.body.position.set(
+                Math.random() - 0.5,
+                Math.random() - 0.5,
+                0.95 + Math.random() * 0.1
+            );
+            this.body.velocity.setZero();
+        }
+
         mat4.identity(this.model_matrix); // takes matrix and resets its transformation  to its original identity
         mat4.fromRotationTranslationScale(this.model_matrix, [this.body.quaternion.x, this.body.quaternion.y, this.body.quaternion.z, this.body.quaternion.w], [this.body.position.x, this.body.position.y, this.body.position.z], [this.radius, this.radius, this.radius]);
     }
