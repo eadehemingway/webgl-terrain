@@ -48,25 +48,25 @@ class TerrainTile {
         // we first iterate over y to get colums and then iterate over x to get rows
         const height_field_array = []; // this will be an array of z values because z is our up
         // we have 9 tiles and each tile has 50 rows and 50 columns (2500 cells)
-        for(let y_index = 0; y_index <= mesh_resolution; y_index++){
+        for(let x_index = 0; x_index < mesh_resolution; x_index++){
             let row = [];
-            for(let x_index = 0; x_index <= mesh_resolution; x_index++){
-
-                const cell_x = x_index/(mesh_resolution) - 0.5;
-                const cell_y = y_index/(mesh_resolution) - 0.5;
-                const height = getHeight(tile_x + cell_x, tile_y + cell_y);
+            for(let y_index = 0; y_index < mesh_resolution; y_index++){
+                const cell_x = 2 * (x_index/(mesh_resolution - 1) - 0.5);
+                const cell_y = 2 * (y_index/(mesh_resolution - 1) - 0.5);
+                const height = getHeight(tile_x + cell_x, tile_y + cell_y) + 1;
                 row.push(height);
             }
             height_field_array.push(row);
         }
 
+        var element_size = 2 / (mesh_resolution);
         // Create the heightfield shape
         var height_field_shape = new CANNON.Heightfield(height_field_array, {
-            elementSize:1, // Distance between the data points in X and Y directions (how big the cells inside the grid is)
+            elementSize: element_size, // Distance between the data points in X and Y directions (how big the cells inside the grid is)
         });
         var height_field_body = new CANNON.Body();
         height_field_body.addShape(height_field_shape);
-        height_field_body.position.set(-mesh_resolution/2, -mesh_resolution/2, 0); // cannon draws planes from top left corner so this is to center it
+        height_field_body.position.set(-1 + tile_x, -1 + tile_y, -1); // cannon draws planes from top left corner so this is to center it
 
         cannon_world.addBody(height_field_body);
 
