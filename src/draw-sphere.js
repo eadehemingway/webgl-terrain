@@ -7,11 +7,12 @@ const { cannon_world, CANNON } = require("./cannon");
 class Sphere{
 
     constructor(x, y, r){
+        this.radius = r;
         this.model_matrix = mat4.create();
         this.body = new CANNON.Body({
             mass: 5, // kg
-            position: new CANNON.Vec3(x, y, 10), // m
-            shape: new CANNON.Sphere(r)
+            position: new CANNON.Vec3(x, y, 1), // m
+            shape: new CANNON.Sphere(this.radius),
         });
         cannon_world.addBody(this.body);
 
@@ -19,8 +20,7 @@ class Sphere{
     // step will only exist on the instance not on the class
     step (){
         mat4.identity(this.model_matrix); // takes matrix and resets its transformation  to its original identity
-        mat4.scale(this.model_matrix, this.model_matrix, [0.05, 0.05, 0.05]);
-        mat4.translate(this.model_matrix, this.model_matrix, [this.body.position.x, this.body.position.y, this.body.position.z]);
+        mat4.fromRotationTranslationScale(this.model_matrix, [this.body.quaternion.x, this.body.quaternion.y, this.body.quaternion.z, this.body.quaternion.w], [this.body.position.x, this.body.position.y, this.body.position.z], [this.radius, this.radius, this.radius]);
     }
 
 };
