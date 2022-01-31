@@ -22,22 +22,24 @@ const drawWaterMesh = regl({
     uniforms: {
         projection_matrix: regl.prop("projection_matrix"),
         view_matrix: regl.prop("view_matrix"),
+        time_elapsed: regl.context("time")
     },
     vert: `
         precision mediump float;
         uniform mat4 projection_matrix;
         uniform mat4 view_matrix;
+        uniform float time_elapsed;
         attribute vec3 position;
         varying vec3 v_position;
         attribute vec3 normal;
         varying vec3 v_normal;
-        ${require("./noise.js")} // gonna use noise to make water bumpy
+        ${require("./3d-noise.js")} // gonna use 3d noise for animated bumpy water
 
 
         void main(){
             v_normal = normal;
             v_position = position;
-            float water_height = snoise(position.xy * 5.0) * 0.001;
+            float water_height = snoise(vec3(position.xy * 5.0, time_elapsed)) * 0.01;
             vec3 water_height_vec = vec3(0.0, 0.0, water_height);
             gl_Position = projection_matrix * view_matrix * vec4(position + water_height_vec , 1.0);
         }
