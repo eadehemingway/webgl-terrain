@@ -114,5 +114,8 @@ TerrainTile.drawMesh = regl({
 
 });
 
+// * 0.5 + 0.5 // turns -1 -> 1 into 0 -> 1
+// * 2 - 1 // turns 0 -> 1 into -1 -> 1
+
 
 exports.TerrainTile = TerrainTile;

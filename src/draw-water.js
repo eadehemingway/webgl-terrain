@@ -31,11 +31,15 @@ const drawWaterMesh = regl({
         varying vec3 v_position;
         attribute vec3 normal;
         varying vec3 v_normal;
+        ${require("./noise.js")} // gonna use noise to make water bumpy
+
 
         void main(){
             v_normal = normal;
             v_position = position;
-            gl_Position = projection_matrix * view_matrix * vec4(position, 1.0);
+            float water_height = snoise(position.xy * 5.0) * 0.001;
+            vec3 water_height_vec = vec3(0.0, 0.0, water_height);
+            gl_Position = projection_matrix * view_matrix * vec4(position + water_height_vec , 1.0);
         }
     `,
     frag: `
