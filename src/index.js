@@ -4,6 +4,8 @@ const wireframe = require("gl-wireframe");
 const { TerrainTile } = require("./draw-mesh");
 const { drawWaterMesh } = require("./draw-water");
 const regl = require("./regl");
+const { flock } = require("./draw-fish");
+
 
 
 // projection is the translation step between 3d and 2d. the projection is like the .range() method in a d3 scale. The space we have to deal with when converting 3d to 2d
@@ -52,6 +54,8 @@ img.onload = ()=> {
             TerrainTile.drawMesh({ grass, projection_matrix, view_matrix , norms:tile.norms, plane: tile.plane });
         }
         drawWaterMesh({ projection_matrix, view_matrix });
+        // drawSphere({ projection_matrix, view_matrix });
+        // flock.tick();
     }
 
     regl.frame(render);

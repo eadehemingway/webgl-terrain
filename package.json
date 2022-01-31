@@ -12,6 +12,7 @@
   "dependencies": {
     "@rollup/plugin-commonjs": "^21.0.1",
     "@rollup/plugin-node-resolve": "^13.0.6",
+    "boids": "^2.0.0",
     "cannon": "^0.6.2",
     "eslint": "^8.2.0",
     "gl-matrix": "^3.4.3",
