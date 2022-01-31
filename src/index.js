@@ -1,8 +1,8 @@
 
-const { Sphere } = require("./draw-sphere");
 const { mat4 } = require("gl-matrix");
 const wireframe = require("gl-wireframe");
 const { TerrainTile } = require("./draw-mesh");
+const { drawWaterMesh } = require("./draw-water");
 const regl = require("./regl");
 
 
@@ -12,7 +12,6 @@ const view_matrix = mat4.create(); // for positioning the camera
 
 
 const terrain_tiles = {};
-const sphere = new Sphere(0, 0, 0.5);
 
 for (var x = -1; x <= 1; x ++){
     for (var y = -1; y <= 1; y ++){
@@ -52,8 +51,7 @@ img.onload = ()=> {
             const tile = terrain_tiles[key];
             TerrainTile.drawMesh({ grass, projection_matrix, view_matrix , norms:tile.norms, plane: tile.plane });
         }
-        sphere.step();
-        Sphere.drawSphere({ projection_matrix, view_matrix, model_matrix: sphere.model_matrix });
+        drawWaterMesh({ projection_matrix, view_matrix });
     }
 
     regl.frame(render);
