@@ -11,6 +11,19 @@ const norms = normals.vertexNormals(plane.cells, plane.positions, 0.000000001); 
 
 const drawWaterMesh = regl({
     // primitive: "lines", // to show the wireframe
+    blend: { // like mix blend mode, the default is to assume that there is a white plane beneath every pixel, so if you make something transparent you will just see white, this allows you to see the stuff underneath
+        enable: true,
+        func: {
+            srcRGB: "src alpha",
+            dstRGB: "one minus src alpha",
+            srcAlpha: "src alpha",
+            dstAlpha: "one minus src alpha"
+        },
+        equation: {
+            rgb: "add",
+            alpha: "add"
+        }
+    },
     attributes: {
         position: regl.buffer(plane.positions), // buffer like a bond, you put your money/data in and then you cant get it out accept in specific conditions which makes it more cost effective
         normal: regl.buffer(norms)// norms is an array of arrays, if you pass an array to regl it automatically creates a buffer for you, a buffer is more efficient way of storing an array so when passing arrays around good to add buffer ourselves
@@ -67,7 +80,7 @@ const drawWaterMesh = regl({
             vec3 albedo = vec3(0.0, 0.0, 1.0);
             vec3 water_color = vec3(albedo * light_brightness);
 
-            gl_FragColor = vec4(mix(water_color, fogColor, fogAmount), 1.0);
+            gl_FragColor = vec4(mix(water_color, fogColor, fogAmount), 0.4);
 
         }
 
