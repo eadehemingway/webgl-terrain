@@ -15,6 +15,7 @@
     "boids": "^2.0.0",
     "cannon": "^0.6.2",
     "eslint": "^8.2.0",
+    "events": "^3.3.0",
     "gl-matrix": "^3.4.3",
     "gl-wireframe": "^1.0.1",
     "icosphere": "^1.0.0",
