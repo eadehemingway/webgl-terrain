@@ -15,7 +15,10 @@ export default {
     plugins: [
         // node wouldnt be able to run the webgl stuff so we use rollup to compile it
         // nodeResolve makes sure you get the right bits of the right node modules
-        nodeResolve({ mainFields: [ "module", "jsnext:main" ] }),
+        nodeResolve({
+            mainFields: [ "module", "jsnext:main" ],
+            preferBuiltins: false,
+        }),
         commonJS(), // rollup by default only uses ES6 so modlues that use earlier ES's need this to convert it to ES6. makes it backwards compatible
     ],
     onwarn: function (warning, warn) {
